@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
+import ImageCropper from './components/ImageCropper/imageCropper.component';
+import ImageUploader from './components/ImageUploader/imageUploader.component';
+
 function App() {
-  return (
+  const [image, setImage] = useState<Maybe<string>>(null);
+
+  const onCrop = (image: any) => { console.log(image); }
+  const cancel = () => { setImage(null) };
+
+  const onDrop = (files: File[]) => {
+    const file = files[0];
+
+    const reader = new FileReader();
+    reader.onload = function(event: ProgressEvent<FileReader>) {
+      const target = event.target as FileReader;
+      setImage(target.result as string);
+    }
+    reader.readAsDataURL(file);
+  }
+
+  return (<>
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {image ?
+          <ImageCropper src={image} onCrop={onCrop} cancel={cancel} /> :
+          <ImageUploader onDrop={onDrop} />
+        }
       </header>
     </div>
-  );
+  </>);
 }
 
 export default App;
