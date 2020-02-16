@@ -1,12 +1,12 @@
 import React from 'react';
-import './imageUploader.style.css';
+import './imageInput.style.css';
 
 import { useDropzone, DropzoneRef, DropzoneProps } from 'react-dropzone';
 
 
-type ImageUploaderProps = DropzoneProps & React.RefAttributes<DropzoneRef>;
+type ImageInputProps = DropzoneProps & React.RefAttributes<DropzoneRef>;
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ accept, ...rest }) => {
+const ImageInput: React.FC<ImageInputProps> = ({ accept, ...rest }) => {
 
   const {
     getRootProps,
@@ -21,7 +21,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ accept, ...rest }) => {
     .concat(isDragReject ? ['error'] : []);
 
   return (<>
-    <div className={classes.join(' ')}>
+    <section className={classes.join(' ')}>
       <div {...getRootProps()}>
         <input {...getInputProps()}/>
         {isDragActive ?
@@ -32,8 +32,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ accept, ...rest }) => {
           <strong>Click or Drag file to select</strong>
         }
       </div>
-    </div>
+    </section>
   </>);
 }
  
-export default ImageUploader;
+export default ImageInput;

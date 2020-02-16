@@ -10,10 +10,12 @@
 
 .image-uploader.success {
   background-color: rgb(46, 213, 115);
+  border-color: rgb(88, 177, 159);
 }
 
 .image-uploader.error {
   background-color: rgb(255, 71, 87);
+  border-color: rgb(179, 55, 113);
 }
 
 .image-uploader > div {
