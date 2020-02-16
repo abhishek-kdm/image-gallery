@@ -1,32 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import './App.css';
 
-import ImageCropper from './components/ImageCropper/imageCropper.component';
-import ImageUploader from './components/ImageUploader/imageUploader.component';
+import ImageCropper, { ImageCropperOptions } from './components/__pure__/ImageCropper/imageCropper.component';
+import ImageInput from './components/__pure__/ImageInput/imageInput.component';
+import { useViewportDimensions } from './utils/hooks';
+
 
 function App() {
   const [image, setImage] = useState<Maybe<string>>(null);
+  // const [dimensions, setDimensions] = useState<Dimensions>({ width: 755, height: 450 });
+  const dimensions = { width: 755, height: 450 };
 
-  const onCrop = (image: any) => { console.log(image); }
-  const cancel = () => { setImage(null) };
+  const viewport = useViewportDimensions();
 
-  const onDrop = (files: File[]) => {
+  const onCrop = useCallback((image: any) => {
+    console.log(image);
+  }, []);
+  const cancel = useCallback(() => { setImage(null); }, [setImage]);
+
+  const onDrop = useCallback((files: File[]) => {
     const file = files[0];
 
-    const reader = new FileReader();
-    reader.onload = function(event: ProgressEvent<FileReader>) {
-      const target = event.target as FileReader;
-      setImage(target.result as string);
+    if (image) { URL.revokeObjectURL(image); }
+    const newImage = URL.createObjectURL(file);
+
+    const img = new Image();
+    img.onload = () => {
+      setImage((initial) => {
+        if (img.width !== 1024 || img.height !== 1024) {
+          alert('wrong width and height');
+          return initial;
+        }
+        return newImage;
+      });
     }
-    reader.readAsDataURL(file);
+    img.src = newImage;
+
+  }, [image, setImage]);
+
+
+  const options: ImageCropperOptions = {
+    viewport: { ...dimensions, type: 'square' },
+    boundary: {
+      width: Math.max(dimensions.width * 1.2, viewport.width * .8),
+      height: Math.max(dimensions.height * 1.2, viewport.height * .8),
+    },
   }
+
+  // const sizes = [
+  //   { width: 755, height: 450 },
+  //   { width: 365, height: 450 },
+  //   { width: 365, height: 212 },
+  //   { width: 380, height: 380 },
+  // ];
 
   return (<>
     <div className="App">
       <header className="App-header">
         {image ?
-          <ImageCropper src={image} onCrop={onCrop} cancel={cancel} /> :
-          <ImageUploader onDrop={onDrop} />
+          <ImageCropper
+            buttonText={'crop'}
+            src={image}
+            options={options}
+            onCrop={onCrop}
+            cancel={cancel}
+          /> :
+          <ImageInput onDrop={onDrop} />
         }
       </header>
     </div>

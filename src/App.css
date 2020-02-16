@@ -11,3 +11,19 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+
+.App-header > section {
+  animation: fadeInUp 1s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 60px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
