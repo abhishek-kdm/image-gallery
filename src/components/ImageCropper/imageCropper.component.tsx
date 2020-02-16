@@ -1,62 +1,69 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './imageCropper.style.css';
 
-import Croppie from 'croppie';
+import Croppie, { CroppieOptions } from 'croppie';
 
 
-interface CropContainer {
+export type ImageCropperOptions = Omit<CroppieOptions, 'enableExif' | 'enableZoom'>;
+
+interface ImageCropper {
   src: Maybe<string>
-  onCrop: (image: any) => void,
+  buttonText: string,
+  onCrop: (image: any) => void
   cancel: () => void
+  options?: ImageCropperOptions
 }
  
-const CropContainer: React.FC<CropContainer> = ({
+const ImageCropper: React.FC<ImageCropper> = ({
   src,
   onCrop,
+  buttonText,
   cancel,
+  options,
 }) => {
 
   const croppieContainer = useRef<HTMLDivElement>(null);
   const [croppie, setCroppie] = useState<Maybe<Croppie>>(null);
 
-  const onClick = () => {
-    croppie?.result().then(onCrop);
-  }
+  const onClick = () => { croppie?.result().then(onCrop); }
 
   useEffect(() => {
     if (croppieContainer.current != null) {
       const element = croppieContainer.current as HTMLDivElement;
-
       setCroppie((initial) => initial || new Croppie(element, {
+        ...(options || {}),
         enableExif: true,
         enableZoom: false,
-        viewport: { width: 100, height: 100, type: 'square' },
-        boundary: { width: 500, height: 500 },
-      }))
+      }));
     }
 
-    return () => { croppie?.destroy(); }
-  }, [croppieContainer, croppie]);
+    /**
+     * @TODO in order to make this responsive, need to somehow 
+     * set croppie to null after calling `.destroy()` on it
+     * as react will preserve the state, even after the object was destroyed.
+     * currently, changing screen size live, will throw errors,
+     * if the follwing is uncommented.
+     */
+    // return () => { croppie?.destroy(); };
+  }, [croppieContainer, croppie, options]);
 
   useEffect(() => {
-    if (src != null) {
-      /** @TODO throwing promise error, needs fixing. */
-      croppie?.bind({ url: src });
-    }
-  }, [croppie, src, croppieContainer])
+    if (src != null) { croppie?.bind({ url: src }); }
+  }, [croppie, src])
+
 
   return (<>
-    <div className='img-cropper'>
+    <section className='img-cropper'>
       <span onClick={cancel} className={'cancel'}>&times;</span>
       <div ref={croppieContainer}></div>
       <div className='button-container'>
         <button onClick={onClick} className={'crop'} type={'button'}>
-          Crop
+          {buttonText}
         </button>
       </div>
-    </div>
+    </section>
   </>);
 }
  
-export default CropContainer;
+export default ImageCropper;
 
