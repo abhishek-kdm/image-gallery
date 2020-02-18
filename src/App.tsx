@@ -1,70 +1,55 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './App.css';
 
-import ImageCropper, { ImageCropperOptions } from './components/__pure__/ImageCropper/imageCropper.component';
 import ImageInput from './components/__pure__/ImageInput/imageInput.component';
-import { useViewportDimensions } from './utils/hooks';
+import MultiSizeImageCropper from './components/MultiSizeImageCropper/multiSizeImageCropper.component';
 
 
 function App() {
+  // for the api call.
+  const [file, setFile] = useState<Maybe<File>>(null);
+  // to show on the webpage.
   const [image, setImage] = useState<Maybe<string>>(null);
-  // const [dimensions, setDimensions] = useState<Dimensions>({ width: 755, height: 450 });
-  const dimensions = { width: 755, height: 450 };
-
-  const viewport = useViewportDimensions();
-
-  const onCrop = useCallback((image: any) => {
-    console.log(image);
-  }, []);
-  const cancel = useCallback(() => { setImage(null); }, [setImage]);
 
   const onDrop = useCallback((files: File[]) => {
-    const file = files[0];
+    setFile(files[0]);
+  }, [setFile]);
 
-    if (image) { URL.revokeObjectURL(image); }
-    const newImage = URL.createObjectURL(file);
+  const sizes = [
+    { width: 755, height: 450 },
+    { width: 365, height: 450 },
+    { width: 365, height: 212 },
+    { width: 380, height: 380 },
+  ];
 
-    const img = new Image();
-    img.onload = () => {
-      setImage((initial) => {
-        if (img.width !== 1024 || img.height !== 1024) {
-          alert('wrong width and height');
-          return initial;
+  useEffect(() => {
+    if (file != null) {
+      const reader = new FileReader();
+
+      reader.onload = ({ target }) => {
+        const result = (target as FileReader).result as string;
+
+        const img = new Image();
+        img.onload = function(e) {
+          if (img.width !== 1024 || img.height !== 1024) {
+            alert('Image needs to be 1024 x 1024.');
+          } else {
+            setImage(result);
+          }
         }
-        return newImage;
-      });
+        img.src = result;
+      }
+
+      reader.readAsDataURL(file);
     }
-    img.src = newImage;
 
-  }, [image, setImage]);
-
-
-  const options: ImageCropperOptions = {
-    viewport: { ...dimensions, type: 'square' },
-    boundary: {
-      width: Math.max(dimensions.width * 1.2, viewport.width * .8),
-      height: Math.max(dimensions.height * 1.2, viewport.height * .8),
-    },
-  }
-
-  // const sizes = [
-  //   { width: 755, height: 450 },
-  //   { width: 365, height: 450 },
-  //   { width: 365, height: 212 },
-  //   { width: 380, height: 380 },
-  // ];
+  }, [file, setImage]);
 
   return (<>
-    <div className="App">
-      <header className="App-header">
+    <div className='App'>
+      <header className='App-header container'>
         {image ?
-          <ImageCropper
-            buttonText={'crop'}
-            src={image}
-            options={options}
-            onCrop={onCrop}
-            cancel={cancel}
-          /> :
+          <MultiSizeImageCropper image={image} sizes={sizes} /> :
           <ImageInput onDrop={onDrop} />
         }
       </header>
