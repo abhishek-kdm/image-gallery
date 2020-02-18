@@ -28,11 +28,14 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({
   } = useImageCropper();
 
   const onNext = useCallback((current) => {
+    const cs = origin as ScreenCoordinates;
+    
+    // update attributes with current origin.
     setAttributes((d) => d.map((d, i) => {
-      const cs = origin as ScreenCoordinates;
       return i === current ? { ...d, ...cs } : d
     }));
 
+    // update origin.
     setOrigin((o) => {
       if (current < attributes.length - 1) {
         const { x, y } = attributes[current + 1];
@@ -41,7 +44,8 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({
       return o;
     });
 
-    setConfirmAndUpload((c) => current < attributes.length - 1 ? c : true);
+    // check for last page, if so, then show `confirm` after done cropping.
+    setConfirmAndUpload(current >= attributes.length - 1);
   }, [attributes, setAttributes, origin, setOrigin]);
 
   const onPrevious = useCallback((current) => {
@@ -54,6 +58,7 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({
     });
   }, [attributes, setOrigin]);
 
+  // resetting origin if not confirm upload.
   useEffect(() => {
     setOrigin((o) => confirmAndUpload ? o : { x: 0, y: 0 });
   }, [confirmAndUpload, setOrigin]);
