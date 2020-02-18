@@ -30,7 +30,7 @@ function App() {
         const result = (target as FileReader).result as string;
 
         const img = new Image();
-        img.onload = function(e) {
+        img.onload = function() {
           if (img.width !== 1024 || img.height !== 1024) {
             alert('Image needs to be 1024 x 1024.');
           } else {

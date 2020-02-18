@@ -1,12 +1,13 @@
 import React from 'react';
 import './imageInput.style.css';
 
+// eslint-disable-next-line no-unused-vars
 import { useDropzone, DropzoneRef, DropzoneProps } from 'react-dropzone';
 
 
 type ImageInputProps = DropzoneProps & React.RefAttributes<DropzoneRef>;
 
-const ImageInput: React.FC<ImageInputProps> = ({ accept, ...rest }) => {
+const ImageInput: React.FC<ImageInputProps> = ({ ...rest }) => {
 
   const {
     getRootProps,
