@@ -18,7 +18,7 @@ const ImageInput: React.FC<ImageInputProps> = ({ accept, ...rest }) => {
 
   const classes = ['image-uploader']
     .concat(isDragAccept ? ['success'] : [])
-    .concat(isDragReject ? ['error'] : []);
+    .concat(isDragReject ? ['danger'] : []);
 
   return (<>
     <section className={classes.join(' ')}>

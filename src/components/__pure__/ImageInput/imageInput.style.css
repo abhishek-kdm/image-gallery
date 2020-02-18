@@ -1,20 +1,21 @@
 .image-uploader {
   cursor: pointer;
   border-radius: 6px;
-  background-color: rgba(255, 255, 255, .2);
+  background-color: rgba(13, 13, 13, .05);
+  max-width: 50rem;
   width: 70vw;
   height: 30vh;
-  border: 2px dashed whitesmoke;
+  border: 2px dashed var(--color-primary);
   outline: none;
 }
 
 .image-uploader.success {
-  background-color: rgb(46, 213, 115);
+  background-color: rgba(46, 213, 115, .4);
   border-color: rgb(88, 177, 159);
 }
 
-.image-uploader.error {
-  background-color: rgb(255, 71, 87);
+.image-uploader.danger {
+  background-color: rgba(255, 71, 87, .4);
   border-color: rgb(179, 55, 113);
 }
 

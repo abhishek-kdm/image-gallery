@@ -12,10 +12,18 @@
   color: white;
 }
 
-
 .App-header > section {
   animation: fadeInUp 1s ease;
 }
+
+.success {
+  color: rgb(88, 177, 159)!important;
+}
+
+.danger {
+  color: rgb(179, 55, 113)!important;
+}
+
 
 @keyframes fadeInUp {
   from {
