@@ -1,0 +1,20 @@
+.confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.confirm .cancel,
+.confirm .confirm {
+  width: auto;
+  cursor: pointer;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.confirm .cancel:hover,
+.confirm .cancel:focus,
+.confirm .confirm:hover,
+.confirm .confirm:focus {
+  border-bottom: 2px solid transparent;
+}
+
