@@ -10,7 +10,7 @@ interface ButtonNavigationProps extends React.HTMLAttributes<HTMLDivElement> {
   children: (current: number) => JSX.Element
 }
  
-const ButtonNavigation: React.SFC<ButtonNavigationProps> = ({
+const ButtonNavigation: React.FC<ButtonNavigationProps> = ({
   navLength,
   start,
   onPrevious,
