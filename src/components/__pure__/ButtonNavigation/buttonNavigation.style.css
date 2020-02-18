@@ -1,0 +1,18 @@
+.button-container {
+  margin: 1rem 0;
+  width: 100%;
+  display: flex;
+}
+
+.button-container button.previous {
+  margin-right: auto;
+}
+
+.button-container button.upload {
+  margin-right: auto;
+}
+
+.button-container button.next {
+  margin-left: auto;
+}
+
