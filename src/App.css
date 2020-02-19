@@ -12,10 +12,6 @@
   color: white;
 }
 
-.App-header > section {
-  animation: fadeInUp 1s ease;
-}
-
 .success {
   color: rgb(88, 177, 159)!important;
 }
@@ -24,6 +20,10 @@
   color: rgb(179, 55, 113)!important;
 }
 
+.fade-in-up {
+  -webkit-animation: fadeInUp 1s ease;
+  animation:         fadeInUp 1s ease;
+}
 
 @keyframes fadeInUp {
   from {
@@ -35,3 +35,4 @@
     transform: translate3d(0, 0, 0);
   }
 }
+

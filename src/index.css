@@ -1,17 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu:400,700&display=swap');
+
 :root {
-  --color-primary: dodgerblue;
+  --color-primary: rgb(112, 161, 255);
 }
 
 * {
-  font-weight: 700;
   color: var(--color-primary);
+  font-family: 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -25,23 +25,18 @@ code {
 
 
 button {
+  font-weight: 700;
+  color: #a6a6a6;
   cursor: pointer;
-  padding: 10px 20px;
-  border: none;
+  padding: 10px 40px;
+  border: 1px solid #dddddd;
   outline: none;
-  border-radius: 3px;
+  border-radius: 50px;
+  background-color: transparent;
 }
 
-button:active { opacity: .8; }
-
-button.primary {
-  color: white;
-  background-color: coral;
-}
-
-button.secondary {
-  color: white;
-  background-color: dodgerblue;
+button:hover {
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, .4);
 }
 
 .container {

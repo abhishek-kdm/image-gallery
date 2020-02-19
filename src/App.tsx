@@ -1,18 +1,38 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import './App.css';
 
 import ImageInput from './components/__pure__/ImageInput/imageInput.component';
 import MultiSizeImageCropper from './components/MultiSizeImageCropper/multiSizeImageCropper.component';
 
+import Laoder from './components/__pure__/Loader/loader.component';
+
+import { AppContext } from './context';
+import { API } from './configs';
+
+
 
 function App() {
   // for the api call.
   const [file, setFile] = useState<Maybe<File>>(null);
-  // to show on the webpage.
-  const [image, setImage] = useState<Maybe<string>>(null);
+  const [pageLoader, setPageLoader] = useState<boolean>(false);
+  // const [sizes, setSizes] = useState<Dimensions[]>([]);
 
+  // on file select.
   const onDrop = useCallback((files: File[]) => {
-    setFile(files[0]);
+    setPageLoader(true);
+    const file = files[0];
+
+    const body = new FormData();
+    body.append('file', file);
+
+    fetch(API.checkImage, { body, method: 'post' })
+      .then((response) => {
+        if (!response.ok) { throw response; }
+        setFile(file);
+      })
+      .catch(async (err) => { alert((await err.json()).message); })
+      .finally(() => { setPageLoader(false); });
+
   }, [setFile]);
 
   const sizes = [
@@ -22,38 +42,18 @@ function App() {
     { width: 380, height: 380 },
   ];
 
-  useEffect(() => {
-    if (file != null) {
-      const reader = new FileReader();
-
-      reader.onload = ({ target }) => {
-        const result = (target as FileReader).result as string;
-
-        const img = new Image();
-        img.onload = function() {
-          if (img.width !== 1024 || img.height !== 1024) {
-            alert('Image needs to be 1024 x 1024.');
-          } else {
-            setImage(result);
-          }
-        }
-        img.src = result;
-      }
-
-      reader.readAsDataURL(file);
-    }
-
-  }, [file, setImage]);
-
   return (<>
-    <div className='App'>
-      <header className='App-header container'>
-        {image ?
-          <MultiSizeImageCropper image={image} sizes={sizes} /> :
-          <ImageInput onDrop={onDrop} />
-        }
-      </header>
-    </div>
+    <AppContext.Provider value={{ file, setFile }}>
+      <Laoder show={pageLoader} text={'validating..'} />
+      <div className='App'>
+        <header className='App-header container'>
+          {file ? 
+            <MultiSizeImageCropper sizes={sizes} /> :
+            <ImageInput onDrop={onDrop} />
+          }
+        </header>
+      </div>
+    </AppContext.Provider>
   </>);
 }
 

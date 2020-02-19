@@ -1,19 +1,20 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
+
+import ButtonNavigation from '../__pure__/ButtonNavigation/buttonNavigation.component';
 
 import { useImageCropper } from '../../utils/hooks';
-import ButtonNavigation from '../__pure__/ButtonNavigation/buttonNavigation.component';
-import Confirm from '../__pure__/Confirm/confirm.component';
+import { AppContext } from '../../context';
+import ConfirmAndUpload from '../ConfirmAndUpload/confirmAndUpload.component';
 
 
-interface MultiSizeImageCropperProps {
-  image: string
-  sizes: Dimensions[]
-}
+interface MultiSizeImageCropperProps { sizes: Dimensions[] }
  
-const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({
-  image,
-  sizes,
-}) => {
+const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({ sizes }) => {
+
+  const { file, setFile } = useContext(AppContext);
+
+  // to show on the webpage.
+  const [image, setImage] = useState<Maybe<string>>(null);
 
   const [confirmAndUpload, setConfirmAndUpload] = useState<boolean>(false);
   const [attributes, setAttributes] = useState<(Dimensions & ScreenCoordinates)[]>(
@@ -28,20 +29,18 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({
   } = useImageCropper();
 
   const onNext = useCallback((current) => {
+    // update `current` `attributes` with reference to the current origin.
     const cs = origin as ScreenCoordinates;
-    
-    // update attributes with current origin.
-    setAttributes((d) => d.map((d, i) => {
-      return i === current ? { ...d, ...cs } : d
-    }));
+    setAttributes((xs) => xs.map((x, i) => i === current ? { ...x, ...cs } : x));
 
-    // update origin.
-    setOrigin((o) => {
+    // update origin, setting it equal to the next attributes' x/y.
+    // so the draggable doesn't stay in the same place as it was previously.
+    setOrigin((state) => {
       if (current < attributes.length - 1) {
         const { x, y } = attributes[current + 1];
         return { x, y }
       }
-      return o;
+      return state;
     });
 
     // check for last page, if so, then show `confirm` after done cropping.
@@ -49,29 +48,68 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({
   }, [attributes, setAttributes, origin, setOrigin]);
 
   const onPrevious = useCallback((current) => {
-    setOrigin((o) => {
+    // updating origin, same principle as the `onNext` function,
+    // except, here, setting origin equal to the previous attributes' x/y.
+    setOrigin((state) => {
       if (current > 0) {
         const { x, y } = attributes[current - 1];
         return { x, y };
       }
-      return o;
+      return state;
     });
   }, [attributes, setOrigin]);
 
-  // resetting origin if not confirm upload.
+
+  // getting image from the `File` object (whener the `File` object updates).
   useEffect(() => {
-    setOrigin((o) => confirmAndUpload ? o : { x: 0, y: 0 });
+    if (file != null) {
+      const reader = new FileReader();
+      reader.onload = ({ target }) => {
+        const result = (target as FileReader).result as string;
+        setImage(result);
+      }
+      reader.readAsDataURL(file);
+    }
+
+  }, [file, setImage]);
+
+  // resetting origin to first image's x/y, if not confirm upload.
+  useEffect(() => {
+    setOrigin((state) => {
+      if (!confirmAndUpload) {
+        const { x, y } = attributes[0];
+        return { x, y };
+      }
+      return state;
+    });
   }, [confirmAndUpload, setOrigin]);
 
+
+  if (confirmAndUpload) {
+    return (
+      <ConfirmAndUpload
+        attributes={attributes}
+        cancel={() => { setConfirmAndUpload(false); }}
+      />
+    );
+  }
+
   return (<>
-    <section style={{ boxSizing: 'border-box', margin: '1rem' }}>
-      {!confirmAndUpload ? (
-        <ButtonNavigation
-          navLength={attributes.length}
-          onNext={onNext}
-          onPrevious={onPrevious}
-        >
-          {(current) => (
+    <section>
+      <h4
+        onClick={() => { setFile(null); }}
+        style={{ cursor: 'pointer', width: '100%', textAlign: 'right' }}
+      >
+        &#x274C;
+      </h4>
+
+      <ButtonNavigation
+        navLength={attributes.length}
+        onNext={onNext}
+        onPrevious={onPrevious}
+      >
+        {(current) => (
+          <div className='image-wrapper'>
             <div {...containerProps({})}>
               <img src={image || ''} alt='' />
               <div
@@ -83,14 +121,9 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({
                 })}
               ></div>
             </div>
-          )}
-        </ButtonNavigation>
-      ) : (
-        <Confirm
-          confirm={() => { console.log(attributes); }}
-          cancel={() => { setConfirmAndUpload(false); }}
-        />
-      )}
+          </div>
+        )}
+      </ButtonNavigation>
     </section>
   </>);
 }
