@@ -4,3 +4,10 @@ export const EVENTS = {
   mouseup: 'mouseup',
 }
 
+
+export const SERVER_URI = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000';
+
+export const API = {
+  checkImage: `${SERVER_URI}/check/`,
+  uploadImage: `${SERVER_URI}/upload/`,
+}
