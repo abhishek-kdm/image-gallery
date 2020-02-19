@@ -2,17 +2,19 @@
   margin: 1rem 0;
   width: 100%;
   display: flex;
+  justify-content: space-between;
 }
 
-.button-container button.previous {
-  margin-right: auto;
+.button-container > div:first-child,
+.button-container > div:last-child {
+  display: flex;
+  flex: 1;
 }
 
-.button-container button.upload {
-  margin-right: auto;
+.button-container > div:first-child {
+  justify-content: flex-end;
 }
 
-.button-container button.next {
-  margin-left: auto;
+.button-container > div:last-child {
+  justify-content: flex-start;
 }
-
