@@ -1,20 +1,27 @@
-.confirm {
+.confirm-container {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 50px;
+  border-radius: 6px;
+  box-shadow: 1px 1px 15px rgba(210, 210, 210, .5);
 }
 
-.confirm .cancel,
-.confirm .confirm {
+.confirm-container .cancel,
+.confirm-container .confirm {
   width: auto;
   cursor: pointer;
-  border-bottom: 2px solid var(--color-primary);
+  text-decoration: underline;
 }
 
-.confirm .cancel:hover,
-.confirm .cancel:focus,
-.confirm .confirm:hover,
-.confirm .confirm:focus {
-  border-bottom: 2px solid transparent;
+.confirm-container .cancel:hover,
+.confirm-container .cancel:focus,
+.confirm-container .confirm:hover,
+.confirm-container .confirm:focus {
+  text-decoration: none;
 }
 
+.confirm-container .cancel {
+  font-size: medium;
+}
