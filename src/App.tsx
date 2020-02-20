@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 import Gallery from './pages/Gallery/gallery.component';
 import Image from './pages/Image/image.component';
+import NotFound from './pages/NotFound/notFound.component';
 
 import Nav from './components/Nav/nav.component';
 import ImageInput from './components/__pure__/ImageInput/imageInput.component';
@@ -47,7 +48,7 @@ function App() {
 
   useEffect(() => {
     setPageLoader({ show: true, text: 'fetchng resources...' });
-    fetch('http://localhost:5000/api/dimensions/')
+    fetch(API.getDimensions)
       .then((res) => { if (!res.ok) throw res; return res.json() })
       .then((sizes) => { setSizes(sizes); })
       .finally(() => { setPageLoader({ show: false }); });
@@ -82,6 +83,7 @@ function App() {
               <Route path={'/gallery/:imageId'} exact>
                 <Image />
               </Route>
+              <Route path={'*'}><NotFound /></Route>
             </Switch>
           </header>
         </BrowserRouter>

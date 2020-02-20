@@ -34,6 +34,19 @@ app.use(express.json());
 
 app.use('/api', ApiRouter);
 
+// using the default create react app dev server
+// during non-production use.
+if (process.env.NODE_ENV === 'production') {
+  const PUBLIC_PATH = resolve(__dirname, '..', 'build');
+
+  app.use(express.static(resolve(PUBLIC_PATH)));
+
+  app.get('*', (_, res) => {
+    res.sendFile(resolve(PUBLIC_PATH, 'index.html'));
+  });
+}
+
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}.`);
 });

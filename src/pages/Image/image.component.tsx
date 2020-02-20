@@ -3,6 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 
 import { AppContext } from '../../context';
 import ButtonNavigation from '../../components/__pure__/ButtonNavigation/buttonNavigation.component';
+import { API } from '../../configs';
 
 
 interface ImageProps { }
@@ -17,7 +18,7 @@ const Image: React.FC<ImageProps> = () => {
 
   useEffect(() => {
     setPageLoader({ show: true, text: 'Loading image...' });
-    fetch(`http://localhost:5000/api/images/${imageId}`)
+    fetch(API.getImage(imageId as string))
       .then((res) => { if (!res.ok) throw res; return res.json(); })
       .then((img) => { setImage(img); })
       .catch(() => { alert('not found'); history.push('/gallery'); })

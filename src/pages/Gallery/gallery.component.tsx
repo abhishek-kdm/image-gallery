@@ -3,6 +3,7 @@ import './gallery.style.css';
 
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../context';
+import { API } from '../../configs';
 
 
 interface GalleryProps { }
@@ -28,7 +29,7 @@ const Gallery: React.FC<GalleryProps> = () => {
 
   useEffect(() => {
     setPageLoader({ show: true, text: 'Loading images...' });
-    fetch('http://localhost:5000/api/images')
+    fetch(API.getImages)
       .then((res) => { if (!res.ok) throw res; return res.json(); })
       .then((imgs) => { setImages(imgs); })
       .finally(() => { setPageLoader({ show: false }); });
