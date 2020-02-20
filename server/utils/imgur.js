@@ -34,13 +34,14 @@ class Imgur {
     return await response.text();
   }
 
+  get baseUrl() { return `${this.API_DOMAIN}/${this.API_VERSION}`; }
 
   imageUploadUrl() {
-    return `${this.API_DOMAIN}/${this.API_VERSION}/upload/`
+    return `${this.baseUrl}/upload/`
   }
 
   imageDeleteUrl(hash) {
-    return `${this.API_DOMAIN}/${this.API_VERSION}/image/${hash}`
+    return `${this.baseUrl}/image/${hash}`
   }
 }
 

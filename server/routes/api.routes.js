@@ -10,6 +10,11 @@ const Imgur = require('../utils/imgur');
 
 const ApiRouter = Router();
 
+ApiRouter.route('/dimensions').get((_, res) => {
+  Dimensions.find({})
+    .then((dimensions) => { return res.json(dimensions); })
+    .catch(() => { return res.status(500).send('Server Error.'); });
+});
 
 ApiRouter.route('/images').get((_, res) => {
   Images.find({})
@@ -94,20 +99,19 @@ ApiRouter.route('/upload')
       })
     );
 
-    let imageObj = null;
     try {
       const image = new Images({
         name: generateFileName(req.file.originalname),
         attributes: imageAttrsObj,
       });
-      imageObj = await image.save();
+      await image.save();
     } catch (error) {
       console.log(error);
       return res.status(500).json({ code: 500, message: 'Server Error.' });
     }
 
     console.log('done.');
-    return res.json({ code: 200, message: '', data: imageObj });
+    return res.json({ code: 200, message: '' });
   });
 
 

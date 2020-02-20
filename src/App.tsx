@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './App.css';
 
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
@@ -19,10 +19,9 @@ import { API } from './configs';
 
 
 function App() {
-  // for the api call.
   const [file, setFile] = useState<Maybe<File>>(null);
   const [pageLoader, setPageLoader] = useState<LoaderProps>({ show: false });
-  // const [sizes, setSizes] = useState<Dimensions[]>([]);
+  const [sizes, setSizes] = useState<Dimensions[]>([]);
 
   // on file select.
   const onDrop = useCallback((files: File[]) => {
@@ -46,12 +45,14 @@ function App() {
 
   }, [setFile]);
 
-  const sizes = [
-    { width: 755, height: 450 },
-    { width: 365, height: 450 },
-    { width: 365, height: 212 },
-    { width: 380, height: 380 },
-  ];
+  useEffect(() => {
+    setPageLoader({ show: true, text: 'fetchng resources...' });
+    fetch('http://localhost:5000/api/dimensions/')
+      .then((res) => { if (!res.ok) throw res; return res.json() })
+      .then((sizes) => { setSizes(sizes); })
+      .finally(() => { setPageLoader({ show: false }); });
+  }, []);
+
 
   return (<>
     <AppContext.Provider value={{ file, setFile, setPageLoader }}>
@@ -67,10 +68,13 @@ function App() {
             <Loader show={pageLoader.show} text={pageLoader.text} />
             <Switch>
               <Route path={'/'} exact>
-                {file ? 
-                  <MultiSizeImageCropper sizes={sizes} /> :
-                  <ImageInput onDrop={onDrop} />
-                }
+                {sizes.length ? (
+                  file ? 
+                    <MultiSizeImageCropper sizes={sizes} /> :
+                    <ImageInput onDrop={onDrop} />
+                ) : (
+                  <h1 className={'text-muted'}>Unable to fetch resources.</h1>
+                )}
               </Route>
               <Route path={'/gallery'} exact>
                 <Gallery />

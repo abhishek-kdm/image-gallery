@@ -97,14 +97,14 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({ sizes }) 
 
   return (<>
     <section>
-      <button
-        className={'button-primary'}
-        onClick={() => setConfirmAndUpload(true)}
-      >Upload with default crop</button>
-      <button
-        className={'button-danger'}
-        onClick={() => { setFile(null); }}
-      >Cancel</button>
+
+      <button className={'button-primary'} onClick={() => setConfirmAndUpload(true)}>
+        Upload
+      </button>
+      <button className={'button-danger'} onClick={() => { setFile(null); }}>
+        Cancel
+      </button>
+
       <ButtonNavigation
         navLength={attributes.length}
         onNext={onNext}
