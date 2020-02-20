@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 
+const { Images } = require('./models/gallery.models');
+
 const { connect, connection } = require('mongoose');
 const { resolve } = require('path');
 

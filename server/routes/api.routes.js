@@ -47,34 +47,39 @@ ApiRouter.route('/upload')
     const attributes = JSON.parse(req.body.attributes);
     const imgur = new Imgur();
 
-    const uploads = await Promise.all(
-      attributes.map(async (attribute) => {
-        // crop
-        const image = await sharp(req.file.buffer)
-          .extract(attribute)
-          .toBuffer();
+    console.log('cropping and uploading.');
+    let uploads = null;
+    try {
+      uploads = await Promise.all(
+        attributes.map(async (attribute) => {
+          // crop
+          const image = await sharp(req.file.buffer)
+            .extract(attribute)
+            .toBuffer();
 
-        // upload
-        attribute['response'] = JSON.parse(await imgur.upload(image.toString('base64')));
+          // upload
+          attribute['response'] = JSON.parse(await imgur.upload(image.toString('base64')));
 
-        return attribute;
-      })
-    );
+          return attribute;
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ code: 500, message: 'upload failed.' });
+    }
 
-    /**
-     * @TODO deleteing all `currently` uploaded images, if any of the
-     * upload fails. not sure about this, need to come back to this.
-     */
     if (uploads.some(({ response }) => !response.success)) {
+      /** @TODO need to come back to this, currently, not sure. */
       // const rollbacks = uploads.map(async ({ data, success }) => {
       //   if (!success)
       //     await imgur.delete(data.deletehash);
       // });
       // Promise.all(rollbacks);
-
       return res.status(500).json({ code: 500, message: 'upload failed!.' });
     }
+    console.log('uploading done.');
 
+    console.log('inserting in db.');
     const imageAttrsObj = await Promise.all(
       uploads.map(async ({ width, height, response }) => {
         const dimensions = await Dimensions
@@ -101,6 +106,7 @@ ApiRouter.route('/upload')
       return res.status(500).json({ code: 500, message: 'Server Error.' });
     }
 
+    console.log('done.');
     return res.json({ code: 200, message: '', data: imageObj });
   });
 
