@@ -43,8 +43,6 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({ sizes }) 
       return state;
     });
 
-    // check for last page, if so, then show `confirm` after done cropping.
-    setConfirmAndUpload(current >= attributes.length - 1);
   }, [attributes, setAttributes, origin, setOrigin]);
 
   const onPrevious = useCallback((current) => {
@@ -82,6 +80,9 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({ sizes }) 
       }
       return state;
     });
+    /** @TODO will come back to this. */
+    // need to disable exhaustive deps, was acting a little wierd.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [confirmAndUpload, setOrigin]);
 
 
@@ -96,13 +97,14 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({ sizes }) 
 
   return (<>
     <section>
-      <h4
+      <button
+        className={'button-primary'}
+        onClick={() => setConfirmAndUpload(true)}
+      >Upload with default crop</button>
+      <button
+        className={'button-danger'}
         onClick={() => { setFile(null); }}
-        style={{ cursor: 'pointer', width: '100%', textAlign: 'right' }}
-      >
-        &#x274C;
-      </h4>
-
+      >Cancel</button>
       <ButtonNavigation
         navLength={attributes.length}
         onNext={onNext}

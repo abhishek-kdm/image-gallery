@@ -5,19 +5,26 @@ import './confirm.style.css';
 interface ConfirmProps
   extends React.HTMLAttributes<HTMLButtonElement>
 {
-  cancel: () => void
   confirm: () => void
+  cancel: () => void
+  confirmText?: string
+  cancelText?: string
 }
  
-const Confirm: React.FC<ConfirmProps> = ({ cancel, confirm }) => {
+const Confirm: React.FC<ConfirmProps> = ({
+  confirm,
+  cancel,
+  confirmText,
+  cancelText
+}) => {
   return (<>
     <div className='confirm-container'>
       <h1 onClick={confirm} className={'confirm'}>
-        {'Confirm and upload Image'}
+        {confirmText || 'Confirm and upload Image'}
       </h1>
       <span onClick={cancel} className={'cancel'}>
         &#8617;
-        Go back.
+        {cancelText || 'Go back'}.
       </span>
     </div>
   </>);

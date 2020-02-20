@@ -2,12 +2,12 @@ import React from 'react';
 import './loader.style.css';
 
 
-interface LaoderProps {
+export interface LoaderProps {
   show: boolean
   text?: string
 }
  
-const Laoder: React.FC<LaoderProps> = ({ show, text }) => {
+const Loader: React.FC<LoaderProps> = ({ show, text }) => {
   return (<>
     {show &&
       <div className='loader'>
@@ -18,4 +18,4 @@ const Laoder: React.FC<LaoderProps> = ({ show, text }) => {
   </>);
 }
  
-export default Laoder;
+export default Loader;

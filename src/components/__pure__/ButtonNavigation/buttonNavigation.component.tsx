@@ -5,6 +5,8 @@ import './buttonNavigation.style.css';
 interface ButtonNavigationProps extends React.HTMLAttributes<HTMLDivElement> {
   navLength: number,
   start?: number,
+  nextButton?: string | JSX.Element
+  previousButton?: string | JSX.Element
   onPrevious?: (current: number) => void,
   onNext?: (current: number) => void,
   children: (current: number) => JSX.Element
@@ -13,15 +15,18 @@ interface ButtonNavigationProps extends React.HTMLAttributes<HTMLDivElement> {
 const ButtonNavigation: React.FC<ButtonNavigationProps> = ({
   navLength,
   start,
+  nextButton,
+  previousButton,
   onPrevious,
   onNext,
   children,
+  ...rest
 }) => {
 
   const [current, setCurrent] = useState<number>(start || 0);
 
   return (
-    <div>
+    <div {...rest}>
       <div className='button-container'>
         <div>
           {current > 0 && (
@@ -32,13 +37,13 @@ const ButtonNavigation: React.FC<ButtonNavigationProps> = ({
                 setCurrent((current) => Math.max(current - 1, 0));
               }}
             >
-              &lArr; Previous
+              {previousButton || 'Previous'}
             </button>
           )}
         </div>
         <small style={{ color: '#c6c6c6', margin: 'auto 3rem' }}>{current + 1} of {navLength}</small>
         <div>
-          {current <= navLength - 1 && (
+          {current < navLength - 1 && (
             <button
               className={'primary'}
               onClick={() => {
@@ -46,7 +51,7 @@ const ButtonNavigation: React.FC<ButtonNavigationProps> = ({
                 setCurrent((current) => Math.min(current + 1, navLength - 1))
               }}
             >
-              Next &rArr;
+              {nextButton || 'Next'}
             </button>
           )}
         </div>

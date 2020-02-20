@@ -2,6 +2,7 @@
 
 :root {
   --color-primary: rgb(112, 161, 255);
+  --color-muted: rgb(198, 198, 198);
 }
 
 * {
@@ -23,26 +24,51 @@ code {
     monospace;
 }
 
+a { text-decoration: underline; }
+a:hover { text-decoration: none; }
 
 button {
   font-weight: 700;
-  color: #a6a6a6;
+  color: rgb(166, 166, 166);
   cursor: pointer;
   padding: 10px 40px;
+  margin: 5px;
   border: 1px solid #dddddd;
   outline: none;
   border-radius: 50px;
   background-color: transparent;
 }
 
+button * { color: rgb(166, 166, 166); }
+
 button:hover {
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, .4);
+}
+
+button.button-primary {
+  color: rgb(46, 213, 115);
+  border-color: rgb(123, 237, 159);
+}
+
+button.button-danger {
+  color: rgb(255, 71, 87);
+  border-color: rgb(255, 107, 129);
 }
 
 .container {
   text-align: center;
   margin-right: auto;
   margin-left: auto;
+  max-width: 50rem;
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+:disabled {
+  opacity: .75;
+  cursor: not-allowed;
 }
 
 @media (max-width: 576px) {
