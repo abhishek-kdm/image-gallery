@@ -29,31 +29,27 @@ const ButtonNavigation: React.FC<ButtonNavigationProps> = ({
     <div {...rest}>
       <div className='button-container'>
         <div>
-          {current > 0 && (
-            <button
-              className={'primary'}
-              onClick={() => {
-                onPrevious && onPrevious(current);
-                setCurrent((current) => Math.max(current - 1, 0));
-              }}
-            >
-              {previousButton || 'Previous'}
-            </button>
-          )}
+          <button
+            className={'primary'}
+            onClick={() => {
+              onPrevious && onPrevious(current);
+              setCurrent((current) => Math.max(current - 1, 0));
+            }}
+          >
+          {previousButton || 'Previous'}
+        </button>
         </div>
         <small style={{ color: '#c6c6c6', margin: 'auto 3rem' }}>{current + 1} of {navLength}</small>
         <div>
-          {current < navLength - 1 && (
-            <button
-              className={'primary'}
-              onClick={() => {
-                onNext && onNext(current);
-                setCurrent((current) => Math.min(current + 1, navLength - 1))
-              }}
-            >
-              {nextButton || 'Next'}
-            </button>
-          )}
+          <button
+            className={'primary'}
+            onClick={() => {
+              onNext && onNext(current);
+              setCurrent((current) => Math.min(current + 1, navLength - 1))
+            }}
+          >
+            {nextButton || 'Next'}
+          </button>
         </div>
       </div>
       {children(current)}

@@ -23,7 +23,7 @@ const Confirm: React.FC<ConfirmProps> = ({
         {confirmText || 'Confirm and upload Image'}
       </h1>
       <span onClick={cancel} className={'cancel'}>
-        &#8617;
+        &#8617;&nbsp;&nbsp;
         {cancelText || 'Go back'}.
       </span>
     </div>

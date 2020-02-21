@@ -47,7 +47,7 @@ const ConfirmAndUpload: React.FC<ConfirmAndUploadProps> = ({
 
   return (<>
     <section className={'fade-in-up'}>
-      <Confirm confirm={confirm} cancel={cancel} />
+      <Confirm confirm={confirm} cancel={cancel} cancelText={'Crop again.'} />
     </section>
   </>);
 }

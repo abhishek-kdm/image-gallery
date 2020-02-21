@@ -43,6 +43,8 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({ sizes }) 
       return state;
     });
 
+    // check for last page, if so, then show `confirm` after done cropping.
+    setConfirmAndUpload(current >= attributes.length - 1);
   }, [attributes, setAttributes, origin, setOrigin]);
 
   const onPrevious = useCallback((current) => {
@@ -97,14 +99,9 @@ const MultiSizeImageCropper: React.FC<MultiSizeImageCropperProps> = ({ sizes }) 
 
   return (<>
     <section>
-
-      <button className={'button-primary'} onClick={() => setConfirmAndUpload(true)}>
-        Upload
-      </button>
       <button className={'button-danger'} onClick={() => { setFile(null); }}>
         Cancel
       </button>
-
       <ButtonNavigation
         navLength={attributes.length}
         onNext={onNext}
