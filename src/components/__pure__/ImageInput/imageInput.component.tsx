@@ -15,7 +15,10 @@ const ImageInput: React.FC<ImageInputProps> = ({ ...rest }) => {
     isDragActive,
     isDragAccept,
     isDragReject,
-  } = useDropzone({ ...rest, accept: 'image/jpeg, image/png' });
+  } = useDropzone({
+    ...rest,
+    accept: 'image/jpeg, image/png',
+  });
 
   const classes = ['image-input fade-in-up']
     .concat(isDragAccept ? ['success'] : [])

@@ -34,6 +34,9 @@ ApiRouter.route('/images/:_id').get((req, res) => {
 
 ApiRouter.route('/check')
   .post(upload.single('file'), async (req, res) => {
+    if (!req.file) {
+      return res.json({ code: 400, message: 'Unknown File.' });
+    }
     const { width, height } = await sharp(req.file.buffer).metadata();
 
     if (parseInt(width) !== 1024 || parseInt(height) !== 1024) {

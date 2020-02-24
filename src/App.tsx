@@ -25,9 +25,13 @@ function App() {
   const [sizes, setSizes] = useState<Dimensions[]>([]);
 
   // on file select.
-  const onDrop = useCallback((files: File[]) => {
+  const onDrop = useCallback((accepted: File[], rejected: File[]) => {
+    if (rejected && rejected[0]) { alert('File not allowed'); return; }
+
+    if (accepted.length > 1) { alert('One file at a time.'); return; }
+
     setPageLoader({ show: true, text: 'validating..' });
-    const file = files[0];
+    const file = accepted[0];
 
     const body = new FormData();
     body.append('file', file);
@@ -38,9 +42,8 @@ function App() {
         setFile(file);
       })
       .catch(async (err) => {
-        if (err.status === 500) {
-          alert((await err.json()).message);
-        } else { alert('something went wrong'); }
+        try { alert((await err.json()).message); }
+        catch { alert('something went wrong'); }
       })
       .finally(() => { setPageLoader({ show: false }); });
 
