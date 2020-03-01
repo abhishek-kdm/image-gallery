@@ -50,7 +50,7 @@ function App() {
   }, [setFile]);
 
   useEffect(() => {
-    setPageLoader({ show: true, text: 'fetchng resources...' });
+    setPageLoader({ show: true, text: 'fetching resources...' });
     fetch(API.getDimensions)
       .then((res) => { if (!res.ok) throw res; return res.json() })
       .then((sizes) => { setSizes(sizes); })

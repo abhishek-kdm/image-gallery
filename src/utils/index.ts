@@ -1,17 +1,3 @@
-type Fetch = (input: RequestInfo, init?: RequestInit | undefined) => Promise<any>;
-
-// fetch request after handling errors, as not a lot of
-// error handling has been done on the server side.
-export const fetchJson: Fetch = async (...args) => {
-  const response = await fetch(...args);
-
-  if (!response.ok) {
-    throw Error(`${response.status} ${response.statusText}`);
-  }
-
-  return await response.json();
-}
-
 export const minMax = (
   value: number,
   min: number,

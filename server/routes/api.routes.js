@@ -4,7 +4,7 @@ const { Images, ImageAttributes, Dimensions } = require('../models/gallery.model
 const upload = require('multer')();
 const sharp = require('sharp');
 
-const { generateFileName } = require('../utils');
+const { generateFileName, validateImage } = require('../utils');
 const Imgur = require('../utils/imgur');
 
 
@@ -34,24 +34,23 @@ ApiRouter.route('/images/:_id').get((req, res) => {
 
 ApiRouter.route('/check')
   .post(upload.single('file'), async (req, res) => {
-    if (!req.file) {
-      return res.json({ code: 400, message: 'Unknown File.' });
+    const { ok, message } = await validateImage(req.file);
+
+    if (!ok) {
+      return res.status(400).send({ code: 400, message });
     }
-    const { width, height } = await sharp(req.file.buffer).metadata();
-
-    if (parseInt(width) !== 1024 || parseInt(height) !== 1024) {
-      const code = 400;
-      const json = { code, message: 'Image needs to be strictly 1024x1024.' };
-
-      return res.status(code).json(json);
-    }
-
-    return res.json({ code: 200, message: 'all good!.' });
+    return res.status(200).json({ code: 200, message });
   });
 
 
 ApiRouter.route('/upload')
   .post(upload.single('file'), async (req, res) => {
+    const { ok, message } = await validateImage(req.file);
+
+    if (!ok) {
+      return res.status(400).send({ code: 400, message });
+    }
+
     const attributes = JSON.parse(req.body.attributes);
     const imgur = new Imgur();
 
